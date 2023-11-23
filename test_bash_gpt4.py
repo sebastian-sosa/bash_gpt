@@ -17,25 +17,31 @@ def test_parse_bash_commands():
     assert bash_gpt4.parse_bash_commands('ls') is None
     assert bash_gpt4.parse_bash_commands('<bash>ls') is None
     assert bash_gpt4.parse_bash_commands('') is None
-    with pytest.raises(ValueError):
-        bash_gpt4.parse_bash_commands('<bash>ls</bash><bash>pwd</bash>')  # Multiple bash tags
+    assert bash_gpt4.parse_bash_commands('<bash>ls</bash><bash>pwd</bash>') == ['ls', 'pwd']
 
 
 @patch('subprocess.run')
 def test_run_bash_command(mock_run):
     bash_gpt4 = BashGPT()
-    mock_run.return_value = Mock(stdout='Hello\n')
+    # Test when the command runs successfully
+    mock_run.return_value = Mock(stdout='Hello\n', returncode=0)
     result = bash_gpt4.run_bash_command('echo Hello')
     assert result == 'Hello\n'
+
+    # Test when the command fails
     mock_run.return_value = Mock(stderr='not found', returncode=1)
     result = bash_gpt4.run_bash_command('invalid_command')
-    assert 'Error:\b not found' in result
+    assert result == 'Error:\b not found'
 
 
 @patch('builtins.input', return_value="")
 @patch('subprocess.run')
 def test_execute_commands(mock_run, mock_input):
     bash_gpt4 = BashGPT()
-    mock_run.return_value = Mock(stdout='Hello\n', stderr=None)  # Change this line
+    mock_run.return_value = Mock(stdout='Hello\n', returncode=0)
     result = bash_gpt4.execute_commands(['echo Hello'])
     assert result == ['Hello\n']
+
+    mock_run.return_value = Mock(stderr='not found', returncode=1)
+    result = bash_gpt4.execute_commands(['invalid_command'])
+    assert result == ['Error:\b not found']
