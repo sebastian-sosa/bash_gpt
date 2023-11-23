@@ -22,9 +22,12 @@ class BashGPT:
             stream=True,
         )
         gpt4_response = ""
+        print("GPT4 Agent:")
         for part in chat_stream:
+            print(part.choices[0].delta.content or "", end="")
             gpt4_response += part.choices[0].delta.content or ""
 
+        print()
         return gpt4_response
 
     def parse_bash_commands(self, gpt4_response: str) -> Optional[str]:
@@ -40,8 +43,7 @@ class BashGPT:
     def execute_commands(self, commands: List[str]) -> List[str]:
         results = []
         for command in commands:
-            print(f"Command to run: {command}")
-            execute = input("Press enter to execute, any other key to abort: ")
+            execute = input(f'Press enter to execute `{command}`, any other key to abort: ')
             if execute == "":
                 result = self.run_bash_command(command)
                 print(f"Command output: {result}")
