@@ -1,6 +1,21 @@
 # BashGPT
 
-BashGPT is a Python application that uses OpenAI's GPT-4 model to generate and execute bash commands in the local machine to answer user's questions. It provides an interactive command-line interface for users to interact with the GPT-4 model.
+BashGPT is a Python application that uses OpenAI's GPT-4 model to generate and execute bash commands in the local machine to answer user's questions. It provides an interactive command-line interface for users to interact with the GPT-4 model:
+
+```
+$ make run
+docker run -it -p 4000:80 bash_gpt
+User: what is the path of the working directory?
+GPT4 Agent:
+<bash>pwd</bash>
+Press enter to execute `pwd`, any other key to abort:
+Command output: /app
+
+GPT4 Agent:
+The path of the working directory is `/app`.
+The path of the working directory is `/app`.
+
+```
 
 As a safety precaution, the program is run within a Docker container and user's confirmation is asked before executing any command. However, you should note that even if the app is run inside a Docker container, commands could potentially be executed in the host machine (for example if Docker container is run with certain privileges, or volumes from the host machine are mounted into the container).
 
