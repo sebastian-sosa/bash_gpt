@@ -13,7 +13,6 @@ Command output: /app
 
 GPT4 Agent:
 The path of the working directory is `/app`.
-The path of the working directory is `/app`.
 
 ```
 
